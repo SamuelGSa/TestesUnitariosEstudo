@@ -3,6 +3,8 @@ package br.ce.wcaquino.servicos;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
+import br.ce.wcaquino.exception.FilmeSemEstoqueException;
+import br.ce.wcaquino.exception.LocadoraExpection;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,8 +50,7 @@ public class LocacaoServiceTest {
 	}
 
 // 3 formas de tratar uma exception com JUnit
-// ELEGANTE = passa na Annotation que é esperado uma Exception.class
-	@Test(expected=Exception.class)
+	@Test(expected= FilmeSemEstoqueException.class)
 	public void teste_deve_retornar_exception_elegante() throws Exception {
 		//Cenario
 		LocacaoService service = new LocacaoService();
@@ -58,36 +59,38 @@ public class LocacaoServiceTest {
 
 		//Acao
 		service.alugarFilme(usuarioteste, filmeTeste);
-	}
-// ROBUSTA = permite um controle melhor na tratativa
-	@Test
-	public void teste_deve_retornar_exception_robusta() {
-		//Cenario
-		LocacaoService service = new LocacaoService();
-		Usuario usuarioteste = new Usuario("Usuario 1");
-		Filme filmeTeste = new Filme("Filme1", 0, 5.0);
 
-		//Acao
+		// Forma Elegante = passa na Annotation que é esperado uma Exception.class
+	}
+
+	@Test
+	public void teste_usuario_vazio() throws FilmeSemEstoqueException {
+		//cenario
+		LocacaoService service = new LocacaoService();
+		Filme filmeTeste = new Filme("Filme1", 2, 5.0);
+
+		//acao
 		try {
-			service.alugarFilme(usuarioteste, filmeTeste);
-			Assert.fail("Deveria ter lançado uma Exceção");
-		} catch (Exception e) {
-			assertThat(e.getMessage(),is("Filme Sem Estoque"));
+			service.alugarFilme(null, filmeTeste);
+			Assert.fail();
 		}
+		 catch (LocadoraExpection e) {
+			Assert.assertThat(e.getMessage(),is("Usuario Vazio"));
+		}
+		// Forma Robusta
 	}
-// FORMA NOVA = permite um controle melhor na tratativa
+
 	@Test
-	public void teste_deve_retornar_exception_nova() throws Exception {
-		//Cenario
-		LocacaoService service = new LocacaoService();
+	public void teste_filme_vazio() throws LocadoraExpection, FilmeSemEstoqueException {
+		//cenario
+ 		LocacaoService service = new LocacaoService();
 		Usuario usuarioteste = new Usuario("Usuario 1");
-		Filme filmeTeste = new Filme("Filme1", 0, 5.0);
 
-		expectedException.expect(Exception.class);
-		expectedException.expectMessage("Filme Sem Estoque");
+		expectedException.expect(LocadoraExpection.class);
+		expectedException.expectMessage("Filme Vazio");
 
-		//Acao
-		service.alugarFilme(usuarioteste, filmeTeste);
+		//acao
+		service.alugarFilme(usuarioteste, null);
 	}
-///////
+	// Forma Nova
 }

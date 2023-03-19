@@ -3,15 +3,24 @@ package br.ce.wcaquino.servicos;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
+import br.ce.wcaquino.exception.FilmeSemEstoqueException;
+import br.ce.wcaquino.exception.LocadoraExpection;
+
 import java.util.Date;
 
 import static br.ce.wcaquino.utils.DataUtils.adicionarDias;
 
 public class LocacaoService {
 	
-	public Locacao alugarFilme(Usuario usuario, Filme filme) throws Exception {
+	public Locacao alugarFilme(Usuario usuario, Filme filme) throws FilmeSemEstoqueException, LocadoraExpection {
+		if (usuario == null){
+			throw new LocadoraExpection("Usuario Vazio");
+		}
+		if (filme == null){
+			throw new LocadoraExpection("Filme Vazio");
+		}
 		if (filme.getEstoque() == 0) {
-			throw new Exception("Filme Sem Estoque");
+			throw new FilmeSemEstoqueException();
 		}
 
 		Locacao locacao = new Locacao();
