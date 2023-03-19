@@ -14,9 +14,14 @@ import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.utils.DataUtils;
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
+import org.junit.rules.ErrorCollector;
 
 class LocacaoServiceTest {
+
+	@Rule
+	public ErrorCollector error = new ErrorCollector();
 	@Test
 	public void test_valida_valor_e_data_locacao() {
 		//Cenario
@@ -28,16 +33,15 @@ class LocacaoServiceTest {
 		Locacao locacao = service.alugarFilme(usuarioteste, filmeTeste);
 		
 		//Verificacao
-//		Assert.assertEquals(5.0,locacao.getValor(), 0.01);
 
-//		Assert.assertThat(locacao.getValor(),CoreMatchers.is(CoreMatchers.equalTo(5.0)));
-		Assert.assertThat(locacao.getValor(), is(equalTo(5.0)));
-//		Assert.assertThat(locacao.getValor(), is(not(6.0)));
+//		Assert.assertThat(locacao.getValor(), is(equalTo(5.0)));
+//		assertThat(isMesmaData(locacao.getDataLocacao(),new Date()),is(true));
+//		assertThat(isMesmaData(locacao.getDataRetorno(),obterDataComDiferencaDias(1)),is(true));
 
-//		Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(),new Date()));
-//		Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
-		assertThat(isMesmaData(locacao.getDataLocacao(),new Date()),is(true));
-		assertThat(isMesmaData(locacao.getDataRetorno(),obterDataComDiferencaDias(1)),is(true));
+		// Dessa forma é especificado a quantidade de  erros ao executar o teste.
+		error.checkThat(locacao.getValor(), is(equalTo(5.0)));
+		error.checkThat(isMesmaData(locacao.getDataLocacao(),new Date()),is(true));
+		error.checkThat(isMesmaData(locacao.getDataRetorno(),obterDataComDiferencaDias(1)),is(true));
 
 				
 		
