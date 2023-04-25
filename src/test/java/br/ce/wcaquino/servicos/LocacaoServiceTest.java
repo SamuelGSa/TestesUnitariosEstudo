@@ -9,7 +9,9 @@ import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static br.ce.wcaquino.utils.DataUtils.isMesmaData;
 import static br.ce.wcaquino.utils.DataUtils.obterDataComDiferencaDias;
@@ -35,10 +37,10 @@ public class LocacaoServiceTest {
 	public void test_valida_valor_e_data_locacao() throws Exception {
 		//Cenario
 		Usuario usuarioteste = new Usuario("Usuario 1");
-		Filme filmeTeste = new Filme("Filme1", 2, 5.0);
+		List<Filme> filmes = Arrays.asList( new Filme("Filme 1", 2, 5.0));
 		
 		//Acao
-		Locacao locacao = service.alugarFilme(usuarioteste, filmeTeste);
+		Locacao locacao = service.alugarFilme(usuarioteste, filmes);
 		
 		//Verificacao
 		Assert.assertThat(locacao.getValor(), is(equalTo(5.0)));
@@ -51,21 +53,21 @@ public class LocacaoServiceTest {
 	public void teste_deve_retornar_exception_elegante() throws Exception {
 		//Cenario
 		usuarioteste = new Usuario("Usuario 1");
-		Filme filmeTeste = new Filme("Filme1", 0, 5.0);
+		List<Filme> filmes = Arrays.asList( new Filme("Filme 1", 0, 4.0));
 
 		//Acao
-		service.alugarFilme(usuarioteste, filmeTeste);
+		service.alugarFilme(usuarioteste, filmes);
 
 	}// Forma Elegante = passa na Annotation que é esperado uma Exception.class
 
 	@Test
 	public void teste_usuario_vazio() throws FilmeSemEstoqueException {
 		//cenario
-		Filme filmeTeste = new Filme("Filme1", 2, 5.0);
+		List<Filme> filmes = Arrays.asList( new Filme("Filme 1", 2, 5.0));
 
 		//acao
 		try {
-			service.alugarFilme(null, filmeTeste);
+			service.alugarFilme(null, filmes);
 			Assert.fail();
 		}
 		 catch (LocadoraExpection e) {
